@@ -1,0 +1,21 @@
+<html>
+    <body>
+        <main>
+            Prototype Task Management
+
+            <h1>Task Management</h1>
+            
+            <h2>Tasks</h2>
+            <ul>
+                {% for task in tasks %}
+                    <li>{{ task.id }} - {{ task.name }} - {{ task.status }}</li>
+                {% endfor %}
+            </ul>
+
+            <h2>Add New Task</h2>
+            <form method="POST" action="/">
+                <button type="submit">Create!</button>
+            </form>
+        </main>
+    </body>
+</html>
