@@ -34,12 +34,16 @@ async function getTasksFromDb() {
 
 const sqs = new aws.SQS({ region: "eu-west-2" });
 
-app.get("/", async (request, response) => {
+app.get("/", (request, response) => {
+    response.send("OK");
+});
+
+app.get("/tasks", async (request, response) => {
     const tasks = await getTasksFromDb();
     response.render("index.html", { tasks });
 });
 
-app.post("/", async (request, response) => {
+app.post("/tasks", async (request, response) => {
     console.log("received post request");
     const task = await addTaskToDb();
     console.log("added to the database");
