@@ -12,6 +12,13 @@
                 {% endfor %}
             </ul>
 
+            <h2>Rules</h2>
+            <ul>
+                {% for rule in rules %}
+                    <li>{{ rule.Name }} - {{ rule.EventPattern }} - {{ rule.ScheduleExpression }}</li>
+                {% endfor %}
+            </ul>
+
             <h2>Add New Task</h2>
             <form method="POST" action="/tasks">
                 <button type="submit">Create!</button>

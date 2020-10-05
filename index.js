@@ -16,23 +16,13 @@ nunjucks.configure("./templates/", {
     express: app
 });
 
-async function addTaskToDb() {
-    return await db
-        .insert({
-            name: "sample",
-            status: "QUEUED",
-        })
-        .into("task")
-        .returning("*");
-}
-
 async function getTasksFromDb() {
     return await db
         .select("*")
         .from("task");
 }
 
-const sqs = new aws.SQS({ region: "eu-west-2" });
+const eventBridge = new aws.EventBridge({ region: "eu-west-2" });
 
 app.get("/", (request, response) => {
     response.send("OK");
@@ -40,20 +30,22 @@ app.get("/", (request, response) => {
 
 app.get("/tasks", async (request, response) => {
     const tasks = await getTasksFromDb();
-    response.render("index.html", { tasks });
+    eventBridge.listRules({}, (err, rules) => {
+        response.render("index.html", { tasks, rules });
+    });
 });
 
 app.post("/tasks", async (request, response) => {
-    console.log("received post request");
-    const task = await addTaskToDb();
-    console.log("added to the database");
-    sqs.sendMessage({
-        QueueUrl: process.env.QUEUE_URL,
-        MessageBody: JSON.stringify(task),
-    }, () => {
-        console.log("done!!");
-        response.redirect("/");
-    });
+    eventBridge.putEvents({
+        Entries: [
+            {
+                DetailType: "EIQ ML Event",
+                Detail: {
+                    JobName: "short_event"
+                },
+            }
+        ]
+    }, () => response.redirect("/tasks"));
 });
 
 const port = process.env.PORT || 3000;
