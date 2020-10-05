@@ -40,9 +40,10 @@ app.post("/tasks", async (request, response) => {
         Entries: [
             {
                 DetailType: "EIQ ML Event",
-                Detail: JSON.parse({
-                    JobName: "short_event"
+                Detail: JSON.stringify({
+                    JobType: "short_event"
                 }),
+                Source: "EIQ Admin"
             }
         ]
     }, (error, data) => {
