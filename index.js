@@ -40,12 +40,16 @@ app.post("/tasks", async (request, response) => {
         Entries: [
             {
                 DetailType: "EIQ ML Event",
-                Detail: {
+                Detail: JSON.parse({
                     JobName: "short_event"
-                },
+                }),
             }
         ]
-    }, () => response.redirect("/tasks"));
+    }, (error, data) => {
+        console.log(error);
+        console.log(data);
+        response.redirect("/tasks");
+    });
 });
 
 const port = process.env.PORT || 3000;
