@@ -13,6 +13,7 @@
             </ul>
 
             <h2>Rules</h2>
+            <div>List of the configured EventBridge Rules</div>
             <ul>
                 {% for rule in rules %}
                     <li>{{ rule.Name }} - {{ rule.EventPattern }} - {{ rule.ScheduleExpression }}</li>
